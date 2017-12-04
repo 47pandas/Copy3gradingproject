@@ -1,145 +1,115 @@
-#include<iostream>
-#include<string>
-#include<fstream>
-#include<vector>
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <string>
 
-//using namespace std;
-
-//std::ifstream input;
-
-class Grades
+class Student
 {
-  public:
-    Grades(const std::string& course,const std::string& grade);
-    std::string get_course();
-    std::string get_grade();
-    void print() const;
-  private:
-    std::string m_course;
-    std::string m_grade;
+    public:
+      Student();
+      void print();
+      std::string test_reader(std::string file, std::string student_id);
+      std::string list_ids();
+      std::string collect_classes();
+      std::string collect_grades(std::string id);
+      void selected_id(std::string id_lookup);
+    private:
+      std::string student_id;
+      std::string class1, class2, class3, class4, class5;
+      std::string grade1, grade2, grade3, grade4, grade5;  
+    
 };
 
-class Students
-{
-  public:
-    Students(const std::string& id);
-    //void list_students();
-    //std::string select_student();
-    std::vector<Grades> get_grade();
-    void add_grade(const Grades& grade);
-    void print() const;
-  private:
-    std::string studentid;
-    std::vector<Grades> m_grades;
-};
-
-class Course
-{
-  public:
-    Course(const std::string& filename);
-    std::vector<std::string> get_classes();
-    Students get_student(std::string id);
-    void add_grades(Students & stu);
-  private:
-    std::vector<std::string> m_classes;
-};
- 
-int main()
+Student::Student()
 {
   
-  Course classes("classes.txt");
-  //please.list_students();
-  //please.select_student();
-  std::vector<std::string> students;
-  students.push_back("00001");
-  students.push_back("00002");
-  students.push_back("00003");
-  students.push_back("00004");
-  students.push_back("00005");
-  for(int i=0;i<students.size();i++)
-  {
-    Students s = classes.get_student(students[i]);  // extract the student data from the files that the class container will open
-    s.print();  // print the student
-  }
-
-return 0;
 }
 
-/////////////Class Students Start////////////////
-Students::Students(const std::string& id)
+void Student::print()
 {
-
+    std::cout << "Student ID: " << student_id << std::endl;
+    std::cout << "-=-=-=-=-=-" << std::endl;
+    std::cout << "Class: " << class1 << "   Grade: " << grade1 << std::endl;
+    std::cout << "Class: " << class2 << " Grade: " << grade2 << std::endl;
+    std::cout << "Class: " << class3 << " Grade: " << grade3 << std::endl;
+    std::cout << "Class: " << class4 << " Grade: " << grade4 << std::endl;
+    std::cout << "Class: " << class5 << " Grade: " << grade5 << std::endl;
+    std::cout << "-=-=-=-=-=-" << std::endl;  
 }
 
-/*void Students::list_students()
+std::string Student::test_reader(std::string file, std::string student_id) 
 {
-   std::cout << "List of current students" << std::endl;
-   input.open("StudentIDs.txt");
-       if(!input.fail())
+    std::ifstream x;
+    x.open(file.c_str());
+    while(!x.eof())
+    { 
+            std::string file_student_id;
+            std::string grade;
+            x >> file_student_id;
+            x >> grade;
+            if(!student_id.compare(file_student_id)) {
+                std::cout << "STUDENT ID " << student_id << std::endl;
+                std::cout << "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" << std::endl;
+                std::cout << "The id is: " << student_id << std::endl;
+                std::cout << "CSC1 Grade is:  " << grade << std::endl;
+                std::cout << "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" << std::endl;
+            }
+            
+            if(x.eof())
+              break;
+            
+    }
+    x.close();
+    x.clear();
+}
+
+std::string Student::list_ids()
+{
+    std::ifstream input;
+    input.open("StudentIDs.txt");
+    if(!input.fail())
     {
         while(!input.eof())
         {
             std::string student_id;
+            std::string grade;
             input >> student_id;
             if(input.eof())
               break;
             std::cout << "The id is: " << student_id << std::endl;
         }
     }
-}*/
-
-/*std::string Students::select_student()
-{
-  std::cout << "Please enter Student ID ";
-  std::string id;
-  getline(std::cin, id);
-  //Code goes here
-  std::cout << "Information Processing " << id << std::endl;
-  //^^^^^
-  return id;
-}*/
-
-
-void Students::add_grade(const Grades& grade)
-{
-
-}    
-
-void Students::print() const
-{
 
 }
-/////////////Class Students End///////////////////
-/////////////Class Course Start///////////////////
-Course::Course(const std::string& filename)
+
+std::string Student::collect_classes()
 {
-     
+    std::ifstream courses;
+    courses.open("classes.txt");
+    courses >> class1;
+    courses >> class2;
+    courses >> class3;
+    courses >> class4;
+    courses >> class5;    
+            
+    courses.close();
+    courses.clear();
 }
 
-Students Course::get_student(std::string id)
+std::string Student::collect_grades(std::string id)
 {
+
     std::ifstream classes;
-    std::cout << "Opening classes.txt " << std::endl;
     classes.open("classes.txt");
-    std::cout << "Opened classes.txt " << std::endl;
-    std::cout << " ----------- " << std::endl;
-    std::cout << "Starting While loop " << std::endl;
     while(!classes.eof())
     {
-        std::cout << "creating string classname " << std::endl;
         std::string classname;
-        std::cout << "getline start " << std::endl;
         std::getline(classes,classname);
-        std::cout << "if statement break start " << std::endl;
         if(classes.eof())
             break;
-        std::cout << "ifstream class_file created " << std::endl;
         std::ifstream class_file;
-        std::cout << " connecting txt to open class file " << std::endl;
         classname += ".txt";
-        std::cout << "opening class file " << std::endl;
         class_file.open(classname.c_str());
-        std::cout << "starting if statement if it doesnt fail " << std::endl;
         if(!class_file.fail())
         {
             std::cout << "will open the class file: " << classname << std::endl;
@@ -152,31 +122,42 @@ Students Course::get_student(std::string id)
             std::cout << "The file " << classname << " cannot be opened" << std::endl;
         }
     }
-}
 
-void Course::add_grades(Students & stu)
-{
 
 }
 
-/////////////Class Course End/////////////////////
-/////////////Class Grades Start/////////////////
-Grades::Grades(const std::string& course,const std::string& grade)
+void Student::selected_id(std::string id_lookup)
 {
+    student_id = id_lookup;
+}
+
+int main()
+{
+    std::vector<Student> students;
   
-}
+    bool more = true;
+    while(more)
+    {
+        
+        Student s;
     
-std::string Grades::get_course()
-{
-  std::cout << "getting course" << std::endl;
+        //s.list_ids();
+        std::string entered_id;
+        getline(std::cin,entered_id);
+        std::cin.ignore();
+        s.selected_id(entered_id);
+        
+        
+        s.collect_classes();
+       // s.collect_grades("00001");
+        s.print();  
+        char response;
+        std::cout << "Look up another Student?" << std::endl;
+        std::cin >> response;      
+        if(response != 'y' && response != 'Y')
+          more = false;
+    }
+  
+  
+    return 0;
 }
-
-std::string Grades::get_grade()
-{
-  std::cout << "getting grades" << std::endl;
-}
-void Grades::print() const
-{
-  std::cout << "Print function" << std::endl;
-}
-/////////////Class Grades End///////////////////
